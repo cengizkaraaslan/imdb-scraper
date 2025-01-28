@@ -1,6 +1,6 @@
 {
   "name": "imdb-scraper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "IMDb scraper for extracting movie reviews",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
     "movie",
     "web-scraping"
   ],
-  "author": "Cengiz Karaaslan", 
+  "author": "Cengiz Karaaslan",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.5",
@@ -30,7 +30,7 @@
     "type": "git",
     "url": "https://github.com/cengizkaraaslan/imdb-scraper.git"
   },
-  "homepage": "https://github.com/cengizkaraaslan/imdb-scraper",   
+  "homepage": "https://github.com/cengizkaraaslan/imdb-scraper",
   "bugs": {
     "url": "https://github.com/cengizkaraaslan/imdb-scraper/issues"
   }
