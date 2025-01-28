@@ -1,5 +1,5 @@
 {
-  "name": "imdb-scraper",
+  "name": "imdbscraper",
   "version": "1.0.1",
   "description": "IMDb scraper for extracting movie reviews",
   "main": "dist/index.js",
