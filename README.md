@@ -14,3 +14,51 @@ Bu projeyi kullanarak IMDb filmleri için yorumları çekebilir ve analiz edebil
 ### Gereksinimler
 - Node.js (v14.x ve üzeri)
 - NPM (Node Paket Yöneticisi)
+
+
+
+```bash
+npm install @speed_of/imdbscraper
+
+
+
+import { imdbScraper } from '@speed_of/imdbscraper';
+
+const imdbId = 'tt0111161'; // Örnek film ID'si
+imdbScraper.getReviews(imdbId)
+    .then(reviews => {
+        console.log('Film İncelemeleri:', reviews);
+    })
+    .catch(error => {
+        console.error('Hata:', error.message);
+    });
+
+
+
+
+
+İnceleme Formatı
+Dönen inceleme verileri aşağıdaki şekilde olacaktır:
+[
+    {
+        "title": "Simply amazing. The best film of the 90's.",
+        "author": "John Doe",
+        "rating": 10,
+        "date": "2000-09-06",
+        "content": "The Shawshank Redemption is without a doubt one of the most brilliant movies...",
+        "votes": {
+            "up": 150,
+            "down": 10
+        },
+        "spoiler": true
+    },
+    ...
+]
+
+
+
+
+
+Hata Yönetimi
+Eğer bir hata ile karşılaşırsanız, hata mesajı konsolda görünür. Örneğin, eğer geçersiz bir IMDb ID'si sağlarsanız, hata mesajı alırsınız.
+Hata: Failed to fetch reviews: IMDb ID not found
