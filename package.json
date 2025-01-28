@@ -1,7 +1,7 @@
 {
   "name": "@speed_of/imdbscraper",
   "version": "1.0.1",
-  "description": "IMDb scraper for extracting movie reviews",
+  "description": "IMDb scraper for extracting movie reviews from IMDb pages.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -33,5 +33,6 @@
   "homepage": "https://github.com/cengizkaraaslan/imdb-scraper",
   "bugs": {
     "url": "https://github.com/cengizkaraaslan/imdb-scraper/issues"
-  }
+  },
+  "readme": "README.md"
 }
