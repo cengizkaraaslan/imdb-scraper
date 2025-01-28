@@ -13,4 +13,4 @@ Bu projeyi kullanarak IMDb filmleri için yorumları çekebilir ve analiz edebil
 
 ### Gereksinimler
 - Node.js (v14.x ve üzeri)
-- NPM (
+- NPM (Node Paket Yöneticisi)
