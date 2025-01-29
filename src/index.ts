@@ -11,6 +11,7 @@ interface IMDbReview {
         down: number;
     };
     spoiler: boolean;
+    reviewId: string;
 }
 
 interface MovieResult {
@@ -72,7 +73,7 @@ class IMDbScraper {
 
             const jsonData = JSON.parse(scriptMatch[1]);
             const reviews = jsonData.props.pageProps.contentData.reviews;
-            console.log(`Found ${reviews.length} reviews`);
+           // console.log(`Found ${reviews.length} reviews`);
 
             return reviews.map((review: any) => {
                 const formattedReview = {
@@ -85,7 +86,8 @@ class IMDbScraper {
                         up: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.upVotes : 0,
                         down: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.downVotes : 0
                     },
-                    spoiler: review.review.spoiler || false
+                    spoiler: review.review.spoiler || false,
+                    reviewId: review.review.reviewId || 0,
                 };
 
                 return formattedReview;
@@ -103,7 +105,7 @@ class IMDbScraper {
 
     async searchMovie(title: string): Promise<MovieResult[]> {
         try {
-            console.log('Searching for movies with title:', title);
+           // console.log('Searching for movies with title:', title);
 
             const response = await axios.get(`https://www.imdb.com/find?q=${encodeURIComponent(title)}&ref_=nv_sr_sm`, {
                 headers: {
@@ -120,7 +122,7 @@ class IMDbScraper {
 
             const jsonData = JSON.parse(scriptMatch[1]);
             const movieResults = jsonData.props.pageProps.titleResults.results;
-            console.log(`Found ${movieResults.length} movies`);
+            //console.log(`Found ${movieResults.length} movies`);
 
             return movieResults.map((movie: any) => {
                 const formattedMovie = {
@@ -130,10 +132,10 @@ class IMDbScraper {
                     titlePosterImageUrl: movie.titlePosterImageModel.url,
                     topCredits: movie.topCredits.map((credit: string) => this.cleanHtmlContent(credit))
                 };
-                console.log(`Processed movie: ${formattedMovie.titleNameText}`);
+               // console.log(`Processed movie: ${formattedMovie.titleNameText}`);
                 return formattedMovie;
             });
-            
+
         } catch (error: any) {
             console.error('Error searching movies:', {
                 message: error.message,
@@ -142,6 +144,9 @@ class IMDbScraper {
             });
             throw new Error(`Failed to search for movies: ${error.message}`);
         }
+    }
+    getReviewUrl(id: string) {
+        return 'https://www.imdb.com/review/' + id + '/?ref_=tturv_perm_1'
     }
 }
 

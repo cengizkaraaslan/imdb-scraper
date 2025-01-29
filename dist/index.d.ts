@@ -9,6 +9,7 @@ interface IMDbReview {
         down: number;
     };
     spoiler: boolean;
+    reviewId: string;
 }
 interface MovieResult {
     id: string;
@@ -22,6 +23,7 @@ declare class IMDbScraper {
     private cleanHtmlContent;
     getReviews(imdbId: string): Promise<IMDbReview[]>;
     searchMovie(title: string): Promise<MovieResult[]>;
+    getReviewUrl(id: string): string;
 }
 export declare const imdbScraper: IMDbScraper;
 export {};

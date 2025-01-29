@@ -66,7 +66,8 @@ class IMDbScraper {
                         up: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.upVotes : 0,
                         down: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.downVotes : 0
                     },
-                    spoiler: review.review.spoiler || false
+                    spoiler: review.review.spoiler || false,
+                    reviewId: review.review.reviewId || 0,
                 };
                 return formattedReview;
             });
@@ -118,6 +119,9 @@ class IMDbScraper {
             });
             throw new Error(`Failed to search for movies: ${error.message}`);
         }
+    }
+    getReviewUrl(id) {
+        return 'https://www.imdb.com/review/' + id + '/?ref_=tturv_perm_1';
     }
 }
 exports.imdbScraper = new IMDbScraper();
