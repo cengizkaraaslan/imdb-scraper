@@ -54,7 +54,7 @@ class IMDbScraper {
             }
             const jsonData = JSON.parse(scriptMatch[1]);
             const reviews = jsonData.props.pageProps.contentData.reviews;
-            console.log(`Found ${reviews.length} reviews`);
+            // console.log(`Found ${reviews.length} reviews`);
             return reviews.map((review) => {
                 const formattedReview = {
                     title: this.cleanHtmlContent(review.reviewSummary || 'No summary'),
@@ -84,7 +84,7 @@ class IMDbScraper {
     async searchMovie(title) {
         var _a, _b;
         try {
-            console.log('Searching for movies with title:', title);
+            // console.log('Searching for movies with title:', title);
             const response = await axios_1.default.get(`https://www.imdb.com/find?q=${encodeURIComponent(title)}&ref_=nv_sr_sm`, {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -98,7 +98,7 @@ class IMDbScraper {
             }
             const jsonData = JSON.parse(scriptMatch[1]);
             const movieResults = jsonData.props.pageProps.titleResults.results;
-            console.log(`Found ${movieResults.length} movies`);
+            //console.log(`Found ${movieResults.length} movies`);
             return movieResults.map((movie) => {
                 const formattedMovie = {
                     id: movie.id,
@@ -107,7 +107,7 @@ class IMDbScraper {
                     titlePosterImageUrl: movie.titlePosterImageModel.url,
                     topCredits: movie.topCredits.map((credit) => this.cleanHtmlContent(credit))
                 };
-                console.log(`Processed movie: ${formattedMovie.titleNameText}`);
+                // console.log(`Processed movie: ${formattedMovie.titleNameText}`);
                 return formattedMovie;
             });
         }
