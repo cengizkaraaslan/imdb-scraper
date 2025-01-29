@@ -15,33 +15,34 @@ async function testScraper() {
             return;
         }
 
-        console.log(`${reviews.length} adet review bulundu.\n`);
+     //   console.log(`${reviews.length} adet review bulundu.\n`);
+        console.log(reviews);
         
-        // İlk review'u detaylı göster
-        const firstReview = reviews[0];
-        console.log('İlk Review Detayları:');
-        console.log('-----------------');
-        Object.entries(firstReview).forEach(([key, value]) => {
-            if (key === 'content') {
-                console.log(`${key}: ${value.substring(0, 100)}...`);
-            } else if (key === 'votes') {
-                console.log(`${key}: up=${value.up}, down=${value.down}`);
-            } else {
-                console.log(`${key}: ${value}`);
-            }
-        });
+        // // İlk review'u detaylı göster
+        // const firstReview = reviews[0];
+        // console.log('İlk Review Detayları:');
+        // console.log('-----------------');
+        // Object.entries(firstReview).forEach(([key, value]) => {
+        //     if (key === 'content') {
+        //         console.log(`${key}: ${value.substring(0, 100)}...`);
+        //     } else if (key === 'votes') {
+        //         console.log(`${key}: up=${value.up}, down=${value.down}`);
+        //     } else {
+        //         console.log(`${key}: ${value}`);
+        //     }
+        // });
 
         // Debug dosyası oluştur
-        const fs = require('fs');
-        const debugData = {
-            totalReviews: reviews.length,
-            firstReview: reviews[0],
-            lastReview: reviews[reviews.length - 1],
-            timestamp: new Date().toISOString()
-        };
+        // const fs = require('fs');
+        // const debugData = {
+        //     totalReviews: reviews.length,
+        //     firstReview: reviews[0],
+        //     lastReview: reviews[reviews.length - 1],
+        //     timestamp: new Date().toISOString()
+        // };
         
-        fs.writeFileSync('debug-output.json', JSON.stringify(debugData, null, 2));
-        console.log('\nDebug bilgileri debug-output.json dosyasına kaydedildi.');
+      //  fs.writeFileSync('debug-output.json', JSON.stringify(debugData, null, 2));
+        //console.log('\nDebug bilgileri debug-output.json dosyasına kaydedildi.');
 
     } catch (error) {
         console.error('\nHata oluştu:', error);

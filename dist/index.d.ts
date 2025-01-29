@@ -19,6 +19,7 @@ interface MovieResult {
 }
 declare class IMDbScraper {
     private baseUrl;
+    private cleanHtmlContent;
     getReviews(imdbId: string): Promise<IMDbReview[]>;
     searchMovie(title: string): Promise<MovieResult[]>;
 }

@@ -24,6 +24,35 @@ interface MovieResult {
 class IMDbScraper {
     private baseUrl = 'https://www.imdb.com/title';
 
+    private cleanHtmlContent(text: string): string {
+        if (!text) return '';
+
+        return text
+            // Replace BR tags with newlines
+            .replace(/<br\s*\/?>/gi, '\n')
+            // Remove all HTML tags
+            .replace(/<[^>]*>/g, '')
+            // Replace common HTML entities
+            .replace(/&quot;/g, '"')
+            .replace(/&apos;/g, "'")
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&')
+            .replace(/&#39;/g, "'")
+            .replace(/&ndash;/g, '-')
+            .replace(/&mdash;/g, '--')
+            .replace(/&nbsp;/g, ' ')
+            .replace(/&lsquo;/g, "'")
+            .replace(/&rsquo;/g, "'")
+            .replace(/&ldquo;/g, '"')
+            .replace(/&rdquo;/g, '"')
+            // Clean up multiple newlines
+            .replace(/\n\s*\n/g, '\n\n')
+            // Clean up extra spaces
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
     async getReviews(imdbId: string): Promise<IMDbReview[]> {
         try {
             console.log('Fetching reviews for:', imdbId);
@@ -47,19 +76,17 @@ class IMDbScraper {
 
             return reviews.map((review: any) => {
                 const formattedReview = {
-                    title: review.reviewSummary || 'No summary',
-                    author: review.review.author ? review.review.author.nickName : 'Anonymous',
+                    title: this.cleanHtmlContent(review.reviewSummary || 'No summary'),
+                    author: this.cleanHtmlContent(review.review.author ? review.review.author.nickName : 'Anonymous'),
                     rating: review.review.authorRating || 0,
                     date: review.review.submissionDate || 'Unknown date',
-                    content: review.review.reviewText || 'No content',
+                    content: this.cleanHtmlContent(review.review.reviewText || 'No content'),
                     votes: {
                         up: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.upVotes : 0,
                         down: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.downVotes : 0
                     },
                     spoiler: review.review.spoiler || false
                 };
-             //   console.log(`Processed review by ${formattedReview.title}`);
-                console.log('Processed review by',reviews);
 
                 return formattedReview;
             });
@@ -98,10 +125,10 @@ class IMDbScraper {
             return movieResults.map((movie: any) => {
                 const formattedMovie = {
                     id: movie.id,
-                    titleNameText: movie.titleNameText,
-                    titleReleaseText: movie.titleReleaseText,
+                    titleNameText: this.cleanHtmlContent(movie.titleNameText),
+                    titleReleaseText: this.cleanHtmlContent(movie.titleReleaseText),
                     titlePosterImageUrl: movie.titlePosterImageModel.url,
-                    topCredits: movie.topCredits
+                    topCredits: movie.topCredits.map((credit: string) => this.cleanHtmlContent(credit))
                 };
                 console.log(`Processed movie: ${formattedMovie.titleNameText}`);
                 return formattedMovie;
