@@ -48,17 +48,19 @@ class IMDbScraper {
             return reviews.map((review: any) => {
                 const formattedReview = {
                     title: review.reviewSummary || 'No summary',
-                    author: review.author ? review.author.name : 'Anonymous',
-                    rating: review.authorRating || 0,
-                    date: review.submissionDate || 'Unknown date',
-                    content: review.reviewText || 'No content',
+                    author: review.review.author ? review.review.author.nickName : 'Anonymous',
+                    rating: review.review.authorRating || 0,
+                    date: review.review.submissionDate || 'Unknown date',
+                    content: review.review.reviewText || 'No content',
                     votes: {
-                        up: review.helpfulnessVotes ? review.helpfulnessVotes.up : 0,
-                        down: review.helpfulnessVotes ? review.helpfulnessVotes.down : 0
+                        up: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.upVotes : 0,
+                        down: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.downVotes : 0
                     },
-                    spoiler: review.spoiler || false
+                    spoiler: review.review.spoiler || false
                 };
-                console.log(`Processed review by ${formattedReview.author}`);
+             //   console.log(`Processed review by ${formattedReview.title}`);
+                console.log('Processed review by',reviews);
+
                 return formattedReview;
             });
 

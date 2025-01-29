@@ -19,45 +19,37 @@ class IMDbScraper {
                     'Accept': 'text/html,application/xhtml+xml'
                 }
             });
-            // __NEXT_DATA__ scriptini bul
             const scriptMatch = response.data.match(/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s);
             if (!scriptMatch) {
+                console.error('JSON data not found in response');
                 throw new Error('JSON data not found');
             }
-            // JSON verisini parse et
             const jsonData = JSON.parse(scriptMatch[1]);
-            // Raw data'yı kaydet
-            const fs = require('fs');
-            fs.writeFileSync('raw-data.json', JSON.stringify(jsonData, null, 2));
-            // Reviews verisini çıkart
             const reviews = jsonData.props.pageProps.contentData.reviews;
-            console.log('Reviews:', reviews);
-            // Review'ları formatla
+            console.log(`Found ${reviews.length} reviews`);
             return reviews.map((review) => {
-                return {
+                const formattedReview = {
                     title: review.reviewSummary || 'No summary',
-                    author: review.author ? review.author.name : 'Anonymous',
-                    rating: review.authorRating || 0,
-                    date: review.submissionDate || 'Unknown date',
-                    content: review.reviewText || 'No content',
+                    author: review.review.author ? review.review.author.nickName : 'Anonymous',
+                    rating: review.review.authorRating || 0,
+                    date: review.review.submissionDate || 'Unknown date',
+                    content: review.review.reviewText || 'No content',
                     votes: {
-                        up: review.helpfulnessVotes ? review.helpfulnessVotes.up : 0,
-                        down: review.helpfulnessVotes ? review.helpfulnessVotes.down : 0
+                        up: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.upVotes : 0,
+                        down: review.review.helpfulnessVotes ? review.review.helpfulnessVotes.downVotes : 0
                     },
-                    spoiler: review.spoiler || false
+                    spoiler: review.review.spoiler || false
                 };
+                console.log(`Processed review by ${formattedReview.title}`);
+                console.log('Processed review by', reviews);
+                return formattedReview;
             });
         }
         catch (error) {
-            // Hata durumunda JSON verisini kaydet
-            if ((_a = error.response) === null || _a === void 0 ? void 0 : _a.data) {
-                const fs = require('fs');
-                fs.writeFileSync('error-data.json', JSON.stringify(error.response.data, null, 2));
-                console.log('Error data saved to error-data.json');
-            }
-            console.error('Error details:', {
+            console.error('Error fetching reviews:', {
                 message: error.message,
-                status: (_b = error.response) === null || _b === void 0 ? void 0 : _b.status
+                status: (_a = error.response) === null || _a === void 0 ? void 0 : _a.status,
+                data: ((_b = error.response) === null || _b === void 0 ? void 0 : _b.data) ? 'Response data available' : 'No response data'
             });
             throw new Error(`Failed to fetch reviews: ${error.message}`);
         }
@@ -72,38 +64,31 @@ class IMDbScraper {
                     'Accept': 'text/html,application/xhtml+xml'
                 }
             });
-            // Find the JSON data embedded in the page
             const scriptMatch = response.data.match(/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s);
             if (!scriptMatch) {
+                console.error('JSON data not found in search response');
                 throw new Error('JSON data not found');
             }
-            // Parse the JSON data
             const jsonData = JSON.parse(scriptMatch[1]);
-            // Raw data saving (optional)
-            const fs = require('fs');
-            fs.writeFileSync('search-results.json', JSON.stringify(jsonData, null, 2));
-            // Extract relevant movie results
             const movieResults = jsonData.props.pageProps.titleResults.results;
-            console.log('Movies found:', movieResults);
-            // Return formatted results
-            return movieResults.map((movie) => ({
-                id: movie.id,
-                titleNameText: movie.titleNameText,
-                titleReleaseText: movie.titleReleaseText,
-                titlePosterImageUrl: movie.titlePosterImageModel.url,
-                topCredits: movie.topCredits
-            }));
+            console.log(`Found ${movieResults.length} movies`);
+            return movieResults.map((movie) => {
+                const formattedMovie = {
+                    id: movie.id,
+                    titleNameText: movie.titleNameText,
+                    titleReleaseText: movie.titleReleaseText,
+                    titlePosterImageUrl: movie.titlePosterImageModel.url,
+                    topCredits: movie.topCredits
+                };
+                console.log(`Processed movie: ${formattedMovie.titleNameText}`);
+                return formattedMovie;
+            });
         }
         catch (error) {
-            // Handle errors and save error data if necessary
-            if ((_a = error.response) === null || _a === void 0 ? void 0 : _a.data) {
-                const fs = require('fs');
-                fs.writeFileSync('error-search-data.json', JSON.stringify(error.response.data, null, 2));
-                console.log('Error data saved to error-search-data.json');
-            }
-            console.error('Error details:', {
+            console.error('Error searching movies:', {
                 message: error.message,
-                status: (_b = error.response) === null || _b === void 0 ? void 0 : _b.status
+                status: (_a = error.response) === null || _a === void 0 ? void 0 : _a.status,
+                data: ((_b = error.response) === null || _b === void 0 ? void 0 : _b.data) ? 'Response data available' : 'No response data'
             });
             throw new Error(`Failed to search for movies: ${error.message}`);
         }
