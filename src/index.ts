@@ -12,6 +12,7 @@ interface IMDbReview {
     };
     spoiler: boolean;
 }
+
 interface MovieResult {
     id: string;
     titleNameText: string;
@@ -19,7 +20,6 @@ interface MovieResult {
     titlePosterImageUrl: string;
     topCredits: string[];
 }
-
 
 class IMDbScraper {
     private baseUrl = 'https://www.imdb.com/title';
@@ -35,26 +35,18 @@ class IMDbScraper {
                 }
             });
 
-            // __NEXT_DATA__ scriptini bul
             const scriptMatch = response.data.match(/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s);
             if (!scriptMatch) {
+                console.error('JSON data not found in response');
                 throw new Error('JSON data not found');
             }
 
-            // JSON verisini parse et
             const jsonData = JSON.parse(scriptMatch[1]);
-
-            // Raw data'yı kaydet
-            const fs = require('fs');
-            fs.writeFileSync('raw-data.json', JSON.stringify(jsonData, null, 2));
-
-            // Reviews verisini çıkart
             const reviews = jsonData.props.pageProps.contentData.reviews;
-            console.log('Reviews:', reviews);
+            console.log(`Found ${reviews.length} reviews`);
 
-            // Review'ları formatla
             return reviews.map((review: any) => {
-                return {
+                const formattedReview = {
                     title: review.reviewSummary || 'No summary',
                     author: review.author ? review.author.name : 'Anonymous',
                     rating: review.authorRating || 0,
@@ -66,24 +58,20 @@ class IMDbScraper {
                     },
                     spoiler: review.spoiler || false
                 };
+                console.log(`Processed review by ${formattedReview.author}`);
+                return formattedReview;
             });
 
         } catch (error: any) {
-            // Hata durumunda JSON verisini kaydet
-            if (error.response?.data) {
-                const fs = require('fs');
-                fs.writeFileSync('error-data.json', JSON.stringify(error.response.data, null, 2));
-                console.log('Error data saved to error-data.json');
-            }
-
-            console.error('Error details:', {
+            console.error('Error fetching reviews:', {
                 message: error.message,
-                status: error.response?.status
+                status: error.response?.status,
+                data: error.response?.data ? 'Response data available' : 'No response data'
             });
-
             throw new Error(`Failed to fetch reviews: ${error.message}`);
         }
     }
+
     async searchMovie(title: string): Promise<MovieResult[]> {
         try {
             console.log('Searching for movies with title:', title);
@@ -95,49 +83,37 @@ class IMDbScraper {
                 }
             });
 
-            // Find the JSON data embedded in the page
             const scriptMatch = response.data.match(/<script id="__NEXT_DATA__" type="application\/json">(.*?)<\/script>/s);
             if (!scriptMatch) {
+                console.error('JSON data not found in search response');
                 throw new Error('JSON data not found');
             }
 
-            // Parse the JSON data
             const jsonData = JSON.parse(scriptMatch[1]);
-
-            // Raw data saving (optional)
-            const fs = require('fs');
-            fs.writeFileSync('search-results.json', JSON.stringify(jsonData, null, 2));
-
-            // Extract relevant movie results
             const movieResults = jsonData.props.pageProps.titleResults.results;
-            console.log('Movies found:', movieResults);
+            console.log(`Found ${movieResults.length} movies`);
 
-            // Return formatted results
-            return movieResults.map((movie: any) => ({
-                id: movie.id,
-                titleNameText: movie.titleNameText,
-                titleReleaseText: movie.titleReleaseText,
-                titlePosterImageUrl: movie.titlePosterImageModel.url,
-                topCredits: movie.topCredits
-            }));
+            return movieResults.map((movie: any) => {
+                const formattedMovie = {
+                    id: movie.id,
+                    titleNameText: movie.titleNameText,
+                    titleReleaseText: movie.titleReleaseText,
+                    titlePosterImageUrl: movie.titlePosterImageModel.url,
+                    topCredits: movie.topCredits
+                };
+                console.log(`Processed movie: ${formattedMovie.titleNameText}`);
+                return formattedMovie;
+            });
             
         } catch (error: any) {
-            // Handle errors and save error data if necessary
-            if (error.response?.data) {
-                const fs = require('fs');
-                fs.writeFileSync('error-search-data.json', JSON.stringify(error.response.data, null, 2));
-                console.log('Error data saved to error-search-data.json');
-            }
-
-            console.error('Error details:', {
+            console.error('Error searching movies:', {
                 message: error.message,
-                status: error.response?.status
+                status: error.response?.status,
+                data: error.response?.data ? 'Response data available' : 'No response data'
             });
-
             throw new Error(`Failed to search for movies: ${error.message}`);
         }
     }
-   
 }
 
 export const imdbScraper = new IMDbScraper();
