@@ -10,7 +10,9 @@ Bu proje, IMDb filmleri için yorumları çekmek ve analiz etmek amacıyla bir s
 projeyi çalıstırmak için
 npm i 
 npm run build
-npm test
+npm testreview
+npm testsearch
+
 
 ```bash
 npm install @speed_of/imdbscraper
@@ -28,9 +30,7 @@ imdbScraper.getReviews(imdbId)
         console.error('Hata:', error.message);
     });
 
-
-
-
+ 
 
 İnceleme Formatı
 Dönen inceleme verileri aşağıdaki şekilde olacaktır:
@@ -52,7 +52,31 @@ Dönen inceleme verileri aşağıdaki şekilde olacaktır:
 
 
 
+const movieTitle = 'The Shawshank Redemption'; // Example movie title
+imdbScraper.searchMovie(movieTitle)
+    .then(movies => {
+        console.log('Bulunan Filmler:', movies);
+    })
+    .catch(error => {
+        console.error('Hata:', error.message);
+    });
 
+
+İnceleme Formatı
+Dönen inceleme verileri aşağıdaki şekilde olacaktır:
+[
+    {
+        "id": "tt0111161",
+        "titleNameText": "The Shawshank Redemption",
+        "titleReleaseText": "1994",
+        "titlePosterImageUrl": "https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZjRiZi00ZjMwLTkzYzktNzVmNzc3YjgyNjQ4XkEyXkFqcGc@._V1_.jpg",
+        "topCredits": ["Tim Robbins", "Morgan Freeman"]
+    },
+    ...
+]
+
+
+ 
 
 Hata Yönetimi
 Eğer bir hata ile karşılaşırsanız, hata mesajı konsolda görünür. Örneğin, eğer geçersiz bir IMDb ID'si sağlarsanız, hata mesajı alırsınız.

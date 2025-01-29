@@ -1,3 +1,5 @@
 node_modules/
 debug-output.json
 raw-data.json
+search-results.json
+debug-search-output.json

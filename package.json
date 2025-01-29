@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && node test/test.js",
+    "testreview": "npm run build && node test/testReview.js",
+    "testsearchmovie": "npm run build && node test/testSearchMovie.js",
     "prepare": "npm run build"
   },
   "keywords": [
