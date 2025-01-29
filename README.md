@@ -7,7 +7,10 @@ Bu proje, IMDb filmleri için yorumları çekmek ve analiz etmek amacıyla bir s
 - Yorum başlığı, yazar, derecelendirme, tarih, içerik ve oylama bilgilerini toplar.
 - JSON formatında verileri işler ve çıktı olarak döker.
 
-
+projeyi çalıstırmak için
+npm i 
+npm run build
+npm test
 
 ```bash
 npm install @speed_of/imdbscraper
